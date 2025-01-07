@@ -1,90 +1,15 @@
 import './App.css'
-import React, { useEffect, useRef } from 'react';
-
-const CanvasWithPerspectiveGrid = () => {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-
-    const gridSettings = {
-      gridSize: 20,
-      lineWidth: 1,
-      lineColor: '#00FFFF',
-      backgroundColor: '#000000',
-    };
-
-    const drawGrid = (ctx, canvas, settings) => {
-      ctx.fillStyle = settings.backgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const maxDistance = Math.sqrt(Math.pow(centerX, 2) + Math.pow(centerY, 2)); // Max distance to the center
-
-      // Horizontal grid lines with skew and fade effect
-      for (let y = 0; y <= canvas.height; y += settings.gridSize) {
-        ctx.beginPath();
-        
-        // Apply perspective skew based on distance from the center
-        const distance = Math.abs(centerY - y);
-        const skew = distance * 0.1; // Skew factor
-        const alpha = Math.max(0, 1 - distance / maxDistance); // Fade based on distance
-        
-        // Move line positions based on skew and fading effect
-        ctx.moveTo(0 + skew, y);
-        ctx.lineTo(canvas.width + skew, y);
-        
-        ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`; // Apply the fading
-        ctx.lineWidth = settings.lineWidth;
-        ctx.stroke();
-      }
-
-      // Vertical grid lines with skew and fade effect
-      for (let x = 0; x <= canvas.width; x += settings.gridSize) {
-        ctx.beginPath();
-
-        // Apply perspective skew based on distance from the center
-        const distance = Math.abs(centerX - x);
-        const skew = distance * 0.1; // Skew factor
-        const alpha = Math.max(0, 1 - distance / maxDistance); // Fade based on distance
-        
-        // Move line positions based on skew and fading effect
-        ctx.moveTo(x, 0 + skew);
-        ctx.lineTo(x, canvas.height + skew);
-        
-        ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`; // Apply the fading
-        ctx.lineWidth = settings.lineWidth;
-        ctx.stroke();
-      }
-    };
-
-    drawGrid(ctx, canvas, gridSettings);
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      drawGrid(ctx, canvas, gridSettings);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} style={{ display: 'block', margin: '0 auto' }}></canvas>;
-};
-
-export default CanvasWithPerspectiveGrid;
+import { Pane } from 'tweakpane';
 
 
 
+function App() {
 
+  
+  return (
+    <>
 
-{/* <header>
+  <header>
     <h1>Electronic Gems</h1>
   </header>
   <canvas id="top-grid"></canvas>
@@ -150,4 +75,11 @@ export default CanvasWithPerspectiveGrid;
   <canvas id="bottom-grid"></canvas>
   <footer>
     <p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
-  </footer> */}
+  </footer>
+
+
+    </>
+  )
+}
+
+export default App
