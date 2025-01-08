@@ -10,21 +10,25 @@ function App() {
     <>
 
   <header>
-    <h1>Electronic Gems</h1>
+    <img id='bg-header' className='bg' src="./grille.svg" alt="" />
+    <img src="./title.png" alt="" />
   </header>
   <canvas id="top-grid"></canvas>
 
   <main>
-    <section>
-      <h2>Cover Generator</h2>
-      <p>Welcome to our promotional pop-up website for the upcoming album! Create and generate different covers to get unique and cool covers and share it with the fan base and your friends!</p>
+    <section className='wlcmSection'>
       <div>
-        <a href="#" target="_blank">Instagram</a>
-        <a href="#" target="_blank">Twitter</a>
-        <a href="#" target="_blank">Facebook</a>
-        <a href="#" target="_blank">YouTube</a>
+        <img src="./logo.png" alt="" />
+        <h1>Cover Generator</h1>
       </div>
-      <p>Use the different parameters like vintage photos, incongruous visuals and let the universe impact your creation, for a truly special cover. If you need inspiration listen to our most recent releases!</p>
+      <p className='welcomP'>Welcome to our promotional pop-up website for the upcoming album! Create and generate different covers to get unique and cool covers and share it <br/> with the fan base and your friends!</p>
+      <div className='socialLinks'>
+        <a href="#" target="_blank" ><img src="./instagramIcon.png" alt="" /></a>
+        <a href="#" target="_blank"><img src="./X_icon.png" alt="" /></a>
+        <a href="#" target="_blank"><img src="./facebookIcon.png" alt="" /></a>
+        <a href="#" target="_blank"><img src="./youtubeIcon.png" alt="" /></a>
+      </div>
+      <p className='explainP'>Use the different parameters like vintage photos, incongruous visuals and let the universe impact your creation, for a truly special cover. If you need inspiration listen to our most recent releases!</p>
       <div>
         <a href="https://www.youtube.com/" target="_blank">Listen to the gem (Link 1)</a>
         <a href="https://www.youtube.com/" target="_blank">Listen to the gem (Link 2)</a>
@@ -73,6 +77,8 @@ function App() {
     </section>
   </main>
   <canvas id="bottom-grid"></canvas>
+  <img id='bg-footer' className='bg' src="./grille.svg" alt="" />
+
   <footer>
     <p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
   </footer>
