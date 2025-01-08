@@ -47,6 +47,7 @@ header {
   justify-content: center;
   align-items: center;
   overflow-x: hidden;
+  margin-bottom: 5vw;
 }
 
 header>img {
@@ -56,10 +57,11 @@ header>img {
 
 .wlcmSection {
   position: relative;
+  margin-bottom: 10vw;
 }
 
 .explainP {
-  margin-top: 19vw;
+  margin-top: 25vw;
   text-align: right;
   width: 60vw;
   margin-left: 30vw;
@@ -71,6 +73,7 @@ header>img {
   width: 16vw;
   left: 36vw;
   top: 19vw;
+  justify-content: space-around;
 }
 
 .socialLinks img {
@@ -108,7 +111,7 @@ main {
   height: 100vw;
 }
 
-main>.wlcmSection>div {
+main>.wlcmSection>:first-child {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -173,6 +176,12 @@ main>section>div>img {
 
 .toggle-btn.hidden {
   transform: rotate(180deg);
+}
+
+
+canvas {
+  height: auto;
+  width: 40vw;
 }
 
 #bg-footer {

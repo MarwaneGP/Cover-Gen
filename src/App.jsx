@@ -79,14 +79,13 @@ function App() {
 					id='bg-header'
 					className='bg'
 					src='./grille.svg'
-					alt=''
-				/>
-				<img
-					src='/CombinationMark.svg'
+            alt=''
+          />
+          <img
+            src='/CombinationMark.svg'
 					alt=''
 				/>
 			</header>
-			<canvas id='top-grid'></canvas>
 
 			<main>
 				<section className='wlcmSection'>
