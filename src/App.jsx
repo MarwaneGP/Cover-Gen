@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 import { Pane } from 'tweakpane'
@@ -46,15 +46,36 @@ function App() {
 		function drawGrid() {
 			if (!ctx) return
 			ctx.clearRect(0, 0, width, height)
-			const circleSize = width / params.GRID_SIZE
-
-			for (let gridX = 0; gridX < width; gridX += circleSize) {
-				for (let gridY = 0; gridY < height; gridY += circleSize) {
+			const cellSize = width / params.GRID_SIZE
+			
+			// Dessin des lignes de la grille
+			ctx.strokeStyle = 'red'; // Couleur des lignes (grise, semi-transparente)
+			ctx.lineWidth = 1;
+	
+			// Lignes verticales
+			for (let x = 0; x <= width; x += cellSize) {
+					ctx.beginPath();
+					ctx.moveTo(x, 0);
+					ctx.lineTo(x, height);
+					ctx.stroke();
+			}
+	
+			// Lignes horizontales
+			for (let y = 0; y <= height; y += cellSize) {
+					ctx.beginPath();
+					ctx.moveTo(0, y);
+					ctx.lineTo(width, y);
+					ctx.stroke();
+			}
+	
+			// Dessin des cercles
+			for (let gridX = 0; gridX < width; gridX += cellSize) {
+				for (let gridY = 0; gridY < height; gridY += cellSize) {
 					drawCircle(
 						ctx,
-						gridX + circleSize / 2,
-						gridY + circleSize / 2,
-						circleSize / 2,
+						gridX + cellSize / 2,
+						gridY + cellSize / 2,
+						cellSize / 2,
 					)
 				}
 			}
