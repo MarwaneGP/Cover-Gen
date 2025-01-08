@@ -5,11 +5,15 @@ import { useEffect, useRef } from 'react'
 import { Pane } from 'tweakpane'
 
 function App() {
-	const [isVisible, setIsVisible] = useState(true)
+	const [isVisible, setIsVisible] = useState(false)
+	const [isVisibleControl, setIsVisibleControl] = useState(false)
 	const canvasRef = useRef(null)
 
 	const toggleModal = () => {
 		setIsVisible(!isVisible)
+	}
+  const toggleModalControl = () => {
+		setIsVisibleControl(!isVisibleControl)
 	}
 
 	useEffect(() => {
@@ -162,7 +166,7 @@ function App() {
 						special cover. If you need inspiration listen to our most recent
 						releases!
 					</p>
-					<div>
+					<div className='musicLinks'>
 						<h3>Listen to the gem </h3>
 						<a
 							href='https://www.youtube.com/'
@@ -177,8 +181,16 @@ function App() {
 					</div>
 				</section>
 				<button
-					className={`toggle-btn ${isVisible ? 'visible' : 'hidden'}`}
+					className={`toggle-storage-btn ${isVisible ? 'visible' : 'hidden'}`}
 					onClick={toggleModal}>
+					<img
+						src='./arrow.png'
+						alt=''
+					/>
+				</button>
+        <button
+					className={`toggle-controls-btn ${isVisibleControl ? 'visible' : 'hidden'}`}
+					onClick={toggleModalControl}>
 					<img
 						src='./arrow.png'
 						alt=''
@@ -195,7 +207,7 @@ function App() {
 					</div>
 				</section>
 
-				<section>
+				<section className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
 					<h3>Controls</h3>
 					<form>
 						<label htmlFor='grid-size'>Grid Size:</label>
