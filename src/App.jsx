@@ -161,14 +161,11 @@ function App() {
 				alt=''
 			/>
 
-    
-  <footer>
-    <p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
-  </footer> 
-
-
-    </>
-  )
+			<footer>
+				<p>&copy; Marwane Ghalila &copy; Yannis G. Bikouta</p>
+			</footer>
+		</>
+	)
 }
 
 export default App
