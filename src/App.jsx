@@ -155,7 +155,7 @@ function App() {
 			/>
 
 			<footer>
-				<p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
+				<p>&copy; Marwane Ghalila &copy; Yannis G. Bikouta</p>
 			</footer>
 		</>
 	)
