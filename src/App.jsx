@@ -1,6 +1,13 @@
+import React, { useState } from 'react';
 import './App.css'
 
 function App() {
+
+  const [isVisible, setIsVisible] = useState(true);
+
+    const toggleModal = () => {
+        setIsVisible(!isVisible);
+    };
 	return (
 		<>
 			<header>
@@ -72,20 +79,24 @@ function App() {
 						releases!
 					</p>
 					<div>
+            <h3>Listen to the gem </h3>
 						<a
 							href='https://www.youtube.com/'
 							target='_blank'>
-							Listen to the gem (Link 1)
+							gem (Link 1)
 						</a>
 						<a
 							href='https://www.youtube.com/'
 							target='_blank'>
-							Listen to the gem (Link 2)
+							gem (Link 2)
 						</a>
 					</div>
 				</section>
+        <button className={`toggle-btn ${isVisible ? 'visible' : 'hidden'}`}onClick={toggleModal}>
+                <img src="./arrow.png" alt="" />
+            </button>
 
-				<section>
+				<section className={`storage ${isVisible ? 'visible' : 'hidden'}`}>
 					<h3>Storage</h3>
 					<div>
 						<div>Item 1</div>
@@ -138,8 +149,11 @@ function App() {
 						</div>
 					</form>
 				</section>
+        <section>
+      <h3>Cover</h3>
+      <canvas></canvas>
+    </section>
 			</main>
-			<canvas id='bottom-grid'></canvas>
 			<img
 				id='bg-footer'
 				className='bg'
@@ -147,10 +161,7 @@ function App() {
 				alt=''
 			/>
 
-    <section>
-      <h3>Cover</h3>
-      <canvas></canvas>
-    </section>
+    
   <footer>
     <p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
   </footer> 
