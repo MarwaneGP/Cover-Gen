@@ -96,13 +96,6 @@ function App() {
 				</section>
 
 				<section>
-					<h3>Cover</h3>
-					<div>
-						<p>Cover</p>
-					</div>
-				</section>
-
-				<section>
 					<h3>Controls</h3>
 					<form>
 						<label htmlFor='grid-size'>Grid Size:</label>
@@ -154,11 +147,17 @@ function App() {
 				alt=''
 			/>
 
-			<footer>
-				<p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
-			</footer>
-		</>
-	)
+    <section>
+      <h3>Cover</h3>
+      <canvas></canvas>
+    </section>
+  <footer>
+    <p>&copy; Marwane Ghalila &copy; Yannis Bikouta</p>
+  </footer> 
+
+
+    </>
+  )
 }
 
 export default App
