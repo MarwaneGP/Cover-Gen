@@ -1,13 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import './App.css'
 
+import { Pane } from 'tweakpane'
+import { useEffect } from 'react'
+import { useRef } from 'react'
+
 function App() {
+	const [isVisible, setIsVisible] = useState(true)
+	const canvasRef = useRef(null)
 
-  const [isVisible, setIsVisible] = useState(true);
+	const toggleModal = () => {
+		setIsVisible(!isVisible)
+	}
 
-    const toggleModal = () => {
-        setIsVisible(!isVisible);
-    };
+	useEffect(() => {
+		const canvas = canvasRef.current
+		if (!canvas) return
+
+		const ctx = canvas.getContext('2d')
+		const width = canvas.clientWidth * 2
+		const height = canvas.clientHeight * 2
+
+		canvas.width = width
+		canvas.height = height
+
+		const params = {
+			GRID_SIZE: 10,
+			RANDOMIZE_CIRCLE_RADIUS: true,
+			RANDOMIZE_CIRCLE_COLOR: false,
+			COLOR_CIRCLE: 'black',
+		}
+
+		const pane = new Pane()
+
+		function drawCircle(ctx, x, y, radius) {
+			if (params.RANDOMIZE_CIRCLE_RADIUS) {
+				radius = radius * Math.random() * 2
+			}
+			ctx.beginPath()
+			ctx.arc(x, y, radius, 0, Math.PI * 2)
+			ctx.fillStyle = params.COLOR_CIRCLE
+			ctx.fill()
+		}
+
+		function drawGrid() {
+			if (!ctx) return
+			ctx.clearRect(0, 0, width, height)
+			const circleSize = width / params.GRID_SIZE
+
+			for (let gridX = 0; gridX < width; gridX += circleSize) {
+				for (let gridY = 0; gridY < height; gridY += circleSize) {
+					drawCircle(
+						ctx,
+						gridX + circleSize / 2,
+						gridY + circleSize / 2,
+						circleSize / 2,
+					)
+				}
+			}
+		}
+
+		drawGrid()
+
+		pane.addBinding(params, 'GRID_SIZE', { min: 1, max: 20, step: 1 }).on('change', drawGrid)
+		pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGrid)
+		pane.addBinding(params, 'COLOR_CIRCLE').on('change', drawGrid)
+
+		return () => {
+			pane.dispose()
+		}
+	}, [])
+
+
 	return (
 		<>
 			<header>
@@ -79,7 +143,7 @@ function App() {
 						releases!
 					</p>
 					<div>
-            <h3>Listen to the gem </h3>
+						<h3>Listen to the gem </h3>
 						<a
 							href='https://www.youtube.com/'
 							target='_blank'>
@@ -92,9 +156,14 @@ function App() {
 						</a>
 					</div>
 				</section>
-        <button className={`toggle-btn ${isVisible ? 'visible' : 'hidden'}`}onClick={toggleModal}>
-                <img src="./arrow.png" alt="" />
-            </button>
+				<button
+					className={`toggle-btn ${isVisible ? 'visible' : 'hidden'}`}
+					onClick={toggleModal}>
+					<img
+						src='./arrow.png'
+						alt=''
+					/>
+				</button>
 
 				<section className={`storage ${isVisible ? 'visible' : 'hidden'}`}>
 					<h3>Storage</h3>
@@ -149,10 +218,10 @@ function App() {
 						</div>
 					</form>
 				</section>
-        <section>
-      <h3>Cover</h3>
-      <canvas></canvas>
-    </section>
+				<section>
+					<h3>Cover</h3>
+					<canvas ref={canvasRef} id='canvas'></canvas>
+				</section>
 			</main>
 			<img
 				id='bg-footer'
