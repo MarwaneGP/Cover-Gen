@@ -130,7 +130,7 @@ main>section>div>img {
 
 .storage {
   position: absolute;
-  bottom: 0vw;
+  bottom: -9vw;
   left: 5vw;
   background-color: #28292E;
   color: white;
@@ -156,7 +156,7 @@ main>section>div>img {
 
 .controls {
   position: absolute;
-  bottom: 20vw;
+  bottom: 11vw;
   right: 7vw;
   background-color: #28292E;
   color: white;
@@ -189,7 +189,7 @@ main>section>div>img {
   cursor: pointer;
   font-size: 16px;
   position: absolute;
-  bottom: 39vw;
+  bottom: 30vw;
   left: 1vw;
   display: flex;
   align-items: center;
@@ -197,7 +197,6 @@ main>section>div>img {
   width: 3vw;
   height: 3vw;
   transform: rotate(180deg);
-
 }
 
 
@@ -209,7 +208,7 @@ main>section>div>img {
   cursor: pointer;
   font-size: 16px;
   position: absolute;
-  bottom: 39vw;
+  bottom: 30vw;
   right: 1.5vw;
   display: flex;
   align-items: center;
@@ -241,11 +240,12 @@ main>section>div>img {
   flex-direction: column;
 }
 
-canvas{
+canvas {
   border-radius: 3%;
   margin: auto;
   height: 40vw;
-  width: 40vw;;
+  width: 40vw;
+  margin-top: 20vw;
 }
 
 #bg-footer {

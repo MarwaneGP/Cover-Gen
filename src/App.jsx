@@ -254,7 +254,6 @@ function App() {
 					</form>
 				</section>
 				<section className='cover-section'>
-					<h3>Cover</h3>
 					<canvas
 						ref={canvasRef}
 						id='canvas'></canvas>
