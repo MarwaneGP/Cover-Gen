@@ -71,7 +71,7 @@ function App() {
 			}
 
 			// Style des lignes néon
-			ctx.strokeStyle = 'rgba(0, 255, 0, 0.8)'
+			ctx.strokeStyle = 'oklch(0.82% 0.792 136)'
 			ctx.lineWidth = 2
 			ctx.shadowColor = 'rgba(0, 255, 0, 0.5)'
 			ctx.shadowBlur = 10
