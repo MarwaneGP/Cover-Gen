@@ -1,5 +1,4 @@
-import './App.css'
-import { Pane } from 'tweakpane';
+import './App.css';
 
 
 
