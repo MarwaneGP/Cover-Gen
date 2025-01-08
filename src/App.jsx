@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 
+import { useEffect, useRef } from 'react'
 import { Pane } from 'tweakpane'
-import { useEffect } from 'react'
-import { useRef } from 'react'
 
 function App() {
 	const [isVisible, setIsVisible] = useState(true)
@@ -47,27 +46,27 @@ function App() {
 			if (!ctx) return
 			ctx.clearRect(0, 0, width, height)
 			const cellSize = width / params.GRID_SIZE
-			
+
 			// Dessin des lignes de la grille
-			ctx.strokeStyle = 'red'; // Couleur des lignes (grise, semi-transparente)
-			ctx.lineWidth = 1;
-	
+			ctx.strokeStyle = 'red' // Couleur des lignes (grise, semi-transparente)
+			ctx.lineWidth = 1
+
 			// Lignes verticales
 			for (let x = 0; x <= width; x += cellSize) {
-					ctx.beginPath();
-					ctx.moveTo(x, 0);
-					ctx.lineTo(x, height);
-					ctx.stroke();
+				ctx.beginPath()
+				ctx.moveTo(x, 0)
+				ctx.lineTo(x, height)
+				ctx.stroke()
 			}
-	
+
 			// Lignes horizontales
 			for (let y = 0; y <= height; y += cellSize) {
-					ctx.beginPath();
-					ctx.moveTo(0, y);
-					ctx.lineTo(width, y);
-					ctx.stroke();
+				ctx.beginPath()
+				ctx.moveTo(0, y)
+				ctx.lineTo(width, y)
+				ctx.stroke()
 			}
-	
+
 			// Dessin des cercles
 			for (let gridX = 0; gridX < width; gridX += cellSize) {
 				for (let gridY = 0; gridY < height; gridY += cellSize) {
@@ -83,7 +82,9 @@ function App() {
 
 		drawGrid()
 
-		pane.addBinding(params, 'GRID_SIZE', { min: 1, max: 20, step: 1 }).on('change', drawGrid)
+		pane
+			.addBinding(params, 'GRID_SIZE', { min: 1, max: 20, step: 1 })
+			.on('change', drawGrid)
 		pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGrid)
 		pane.addBinding(params, 'COLOR_CIRCLE').on('change', drawGrid)
 
@@ -92,7 +93,6 @@ function App() {
 		}
 	}, [])
 
-
 	return (
 		<>
 			<header>
@@ -100,10 +100,10 @@ function App() {
 					id='bg-header'
 					className='bg'
 					src='./grille.svg'
-            alt=''
-          />
-          <img
-            src='/CombinationMark.svg'
+					alt=''
+				/>
+				<img
+					src='/CombinationMark.svg'
 					alt=''
 				/>
 			</header>
@@ -240,7 +240,9 @@ function App() {
 				</section>
 				<section>
 					<h3>Cover</h3>
-					<canvas ref={canvasRef} id='canvas'></canvas>
+					<canvas
+						ref={canvasRef}
+						id='canvas'></canvas>
 				</section>
 			</main>
 			<img
