@@ -28,7 +28,7 @@ function App() {
 			GRID_SIZE: 10,
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
-			COLOR_CIRCLE: 'black',
+			COLOR_CIRCLE: 'red',
 		}
 
 		const pane = new Pane()
