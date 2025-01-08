@@ -12,7 +12,7 @@ function App() {
 	const toggleModal = () => {
 		setIsVisible(!isVisible)
 	}
-  const toggleModalControl = () => {
+	const toggleModalControl = () => {
 		setIsVisibleControl(!isVisibleControl)
 	}
 
@@ -28,9 +28,7 @@ function App() {
 		canvas.height = height
 
 		const params = {
-			GRID_SIZE: 30,
-			LINE_COLOR: 'rgba(0, 255, 0, 0.8)', // Couleur néon vert
-			LINE_WIDTH: 5, // Épaisseur des lignes
+			GRID_SIZE: 20,
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
 			COLOR_CIRCLE: 'red',
@@ -49,38 +47,28 @@ function App() {
 		// }
 
 		function drawGrid() {
-			ctx.clearRect(0, 0, width, height);
+			if (!ctx) return
+			ctx.clearRect(0, 0, width, height) // Efface le canvas
+			const cellSize = width / params.GRID_SIZE // Taille des cellules de la grille
 
-			// Couleur de fond
-			ctx.fillStyle = 'gray';
-			ctx.fillRect(0, 0, width, height);
+			// Dessin des lignes de la grille
+			ctx.strokeStyle = 'gray' // Couleur des lignes (grise, semi-transparente)
+			ctx.lineWidth = 1
 
-			// Couleur et épaisseur des lignes
-			ctx.strokeStyle = params.LINE_COLOR;
-			ctx.lineWidth = params.LINE_WIDTH;
-
-			const centerX = width / 2;
-			const centerY = height / params.PERSPECTIVE;
-
-			// Dessin des lignes horizontales avec perspective
-			for (let i = 0; i < params.GRID_LINES; i++) {
-				const y = (height / params.GRID_LINES) * i;
-				const xOffset = (centerX / params.GRID_LINES) * i;
-
-				ctx.beginPath();
-				ctx.moveTo(xOffset, y); // Début de la ligne
-				ctx.lineTo(width - xOffset, y); // Fin de la ligne
-				ctx.stroke();
+			// Lignes verticales
+			for (let x = 0; x <= width; x += cellSize) {
+				ctx.beginPath()
+				ctx.moveTo(x, 0)
+				ctx.lineTo(x, height)
+				ctx.stroke()
 			}
 
-			// Dessin des lignes verticales avec perspective
-			for (let i = 0; i < params.GRID_LINES; i++) {
-				const x = (width / params.GRID_LINES) * i;
-
-				ctx.beginPath();
-				ctx.moveTo(x, height); // Début de la ligne
-				ctx.lineTo(centerX, centerY); // Convergence au point de fuite
-				ctx.stroke();
+			// Lignes horizontales
+			for (let y = 0; y <= height; y += cellSize) {
+				ctx.beginPath()
+				ctx.moveTo(0, y)
+				ctx.lineTo(width, y)
+				ctx.stroke()
 			}
 
 			// Dessin des cercles
@@ -200,8 +188,10 @@ function App() {
 						alt=''
 					/>
 				</button>
-        <button
-					className={`toggle-controls-btn ${isVisibleControl ? 'visible' : 'hidden'}`}
+				<button
+					className={`toggle-controls-btn ${
+						isVisibleControl ? 'visible' : 'hidden'
+					}`}
 					onClick={toggleModalControl}>
 					<img
 						src='./arrow.png'
@@ -219,7 +209,8 @@ function App() {
 					</div>
 				</section>
 
-				<section className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
+				<section
+					className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
 					<h3>Controls</h3>
 					<form>
 						<label htmlFor='grid-size'>Grid Size:</label>
