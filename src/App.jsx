@@ -28,7 +28,10 @@ function App() {
 		canvas.height = height
 
 		const params = {
-			GRID_SIZE: 20,
+			GRID_SIZE: 30,
+			LINE_COLOR: 'rgba(0, 255, 0, 0.8)', // Couleur néon vert
+			LINE_WIDTH: 2, // Épaisseur des lignes
+			PERSPECTIVE: 1.5, // Facteur de perspective
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
 			COLOR_CIRCLE: 'red',
@@ -46,28 +49,45 @@ function App() {
 		// 	ctx.fill()
 		// }
 
-		function drawGrid() {
+		function drawRandomizedGrid() {
 			if (!ctx) return
-			ctx.clearRect(0, 0, width, height) // Efface le canvas
-			const cellSize = width / params.GRID_SIZE // Taille des cellules de la grille
 
-			// Dessin des lignes de la grille
-			ctx.strokeStyle = 'gray' // Couleur des lignes (grise, semi-transparente)
-			ctx.lineWidth = 1
+			ctx.clearRect(0, 0, width, height)
+			ctx.fillStyle = 'black'
+			ctx.fillRect(0, 0, width, height)
 
-			// Lignes verticales
-			for (let x = 0; x <= width; x += cellSize) {
-				ctx.beginPath()
-				ctx.moveTo(x, 0)
-				ctx.lineTo(x, height)
-				ctx.stroke()
+			ctx.clearRect(0, 0, width, height)
+
+			// Fond noir
+			ctx.fillStyle = 'black'
+			ctx.fillRect(0, 0, width, height)
+
+			// Ajout d'étoiles aléatoires
+			ctx.fillStyle = 'white'
+			for (let i = 0; i < 100; i++) {
+				const x = Math.random() * width
+				const y = Math.random() * height
+				ctx.fillRect(x, y, 1, 1)
 			}
 
-			// Lignes horizontales
-			for (let y = 0; y <= height; y += cellSize) {
+			// Style des lignes néon
+			ctx.strokeStyle = 'rgba(0, 255, 0, 0.8)'
+			ctx.lineWidth = 2
+			ctx.shadowColor = 'rgba(0, 255, 0, 0.5)'
+			ctx.shadowBlur = 10
+
+			const gridLines = params.GRID_SIZE
+			const randomAngle = (Math.random() * Math.PI) / 4 // Angle aléatoire
+			const randomPerspective = 1 + Math.random() // Perspective aléatoire
+			const centerX = width / 2
+			const centerY = height / 2
+			for (let i = -gridLines; i <= gridLines; i++) {
+				const xOffset = Math.sin(randomAngle) * i * 20
+				const yOffset = Math.cos(randomAngle) * i * 20
+
 				ctx.beginPath()
-				ctx.moveTo(0, y)
-				ctx.lineTo(width, y)
+				ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective)
+				ctx.lineTo(centerX + xOffset * randomPerspective, height)
 				ctx.stroke()
 			}
 
@@ -84,13 +104,15 @@ function App() {
 			} */
 		}
 
-		drawGrid()
+		drawRandomizedGrid()
 
 		pane
 			.addBinding(params, 'GRID_SIZE', { min: 1, max: 20, step: 1 })
-			.on('change', drawGrid)
-		pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGrid)
-		pane.addBinding(params, 'COLOR_CIRCLE').on('change', drawGrid)
+			.on('change', drawRandomizedGrid)
+		pane
+			.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS')
+			.on('change', drawRandomizedGrid)
+		pane.addBinding(params, 'COLOR_CIRCLE').on('change', drawRandomizedGrid)
 
 		return () => {
 			pane.dispose()
