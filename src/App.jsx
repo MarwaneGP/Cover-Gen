@@ -24,7 +24,9 @@ function App() {
 		canvas.height = height
 
 		const params = {
-			GRID_SIZE: 10,
+			GRID_SIZE: 30,
+			LINE_COLOR: 'rgba(0, 255, 0, 0.8)', // Couleur néon vert
+			LINE_WIDTH: 5, // Épaisseur des lignes
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
 			COLOR_CIRCLE: 'red',
@@ -32,43 +34,53 @@ function App() {
 
 		const pane = new Pane()
 
-		function drawCircle(ctx, x, y, radius) {
-			if (params.RANDOMIZE_CIRCLE_RADIUS) {
-				radius = radius * Math.random() * 2
-			}
-			ctx.beginPath()
-			ctx.arc(x, y, radius, 0, Math.PI * 2)
-			ctx.fillStyle = params.COLOR_CIRCLE
-			ctx.fill()
-		}
+		// function drawCircle(ctx, x, y, radius) {
+		// 	if (params.RANDOMIZE_CIRCLE_RADIUS) {
+		// 		radius = radius * Math.random() * 2
+		// 	}
+		// 	ctx.beginPath()
+		// 	ctx.arc(x, y, radius, 0, Math.PI * 2)
+		// 	ctx.fillStyle = params.COLOR_CIRCLE
+		// 	ctx.fill()
+		// }
 
 		function drawGrid() {
-			if (!ctx) return
-			ctx.clearRect(0, 0, width, height)
-			const cellSize = width / params.GRID_SIZE
+			ctx.clearRect(0, 0, width, height);
 
-			// Dessin des lignes de la grille
-			ctx.strokeStyle = 'red' // Couleur des lignes (grise, semi-transparente)
-			ctx.lineWidth = 1
+			// Couleur de fond
+			ctx.fillStyle = 'gray';
+			ctx.fillRect(0, 0, width, height);
 
-			// Lignes verticales
-			for (let x = 0; x <= width; x += cellSize) {
-				ctx.beginPath()
-				ctx.moveTo(x, 0)
-				ctx.lineTo(x, height)
-				ctx.stroke()
+			// Couleur et épaisseur des lignes
+			ctx.strokeStyle = params.LINE_COLOR;
+			ctx.lineWidth = params.LINE_WIDTH;
+
+			const centerX = width / 2;
+			const centerY = height / params.PERSPECTIVE;
+
+			// Dessin des lignes horizontales avec perspective
+			for (let i = 0; i < params.GRID_LINES; i++) {
+				const y = (height / params.GRID_LINES) * i;
+				const xOffset = (centerX / params.GRID_LINES) * i;
+
+				ctx.beginPath();
+				ctx.moveTo(xOffset, y); // Début de la ligne
+				ctx.lineTo(width - xOffset, y); // Fin de la ligne
+				ctx.stroke();
 			}
 
-			// Lignes horizontales
-			for (let y = 0; y <= height; y += cellSize) {
-				ctx.beginPath()
-				ctx.moveTo(0, y)
-				ctx.lineTo(width, y)
-				ctx.stroke()
+			// Dessin des lignes verticales avec perspective
+			for (let i = 0; i < params.GRID_LINES; i++) {
+				const x = (width / params.GRID_LINES) * i;
+
+				ctx.beginPath();
+				ctx.moveTo(x, height); // Début de la ligne
+				ctx.lineTo(centerX, centerY); // Convergence au point de fuite
+				ctx.stroke();
 			}
 
 			// Dessin des cercles
-			for (let gridX = 0; gridX < width; gridX += cellSize) {
+			/* for (let gridX = 0; gridX < width; gridX += cellSize) {
 				for (let gridY = 0; gridY < height; gridY += cellSize) {
 					drawCircle(
 						ctx,
@@ -77,7 +89,7 @@ function App() {
 						cellSize / 2,
 					)
 				}
-			}
+			} */
 		}
 
 		drawGrid()
@@ -238,7 +250,7 @@ function App() {
 						</div>
 					</form>
 				</section>
-				<section>
+				<section className='cover-section'>
 					<h3>Cover</h3>
 					<canvas
 						ref={canvasRef}

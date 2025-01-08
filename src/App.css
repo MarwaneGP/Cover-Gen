@@ -178,10 +178,16 @@ main>section>div>img {
   transform: rotate(180deg);
 }
 
+.cover-section {
+  display: flex;
+  flex-direction: column;
+}
 
-canvas {
-  height: auto;
-  width: 40vw;
+canvas{
+  border-radius: 3%;
+  margin: auto;
+  height: 40vw;
+  width: 40vw;;
 }
 
 #bg-footer {
