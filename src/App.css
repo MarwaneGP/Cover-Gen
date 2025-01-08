@@ -6,6 +6,7 @@ body {
   font-family: "Poppins", serif;
   height: 150vw;
   position: relative;
+  overflow-x: hidden;
 }
 
 h1 {
