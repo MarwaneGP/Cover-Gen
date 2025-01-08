@@ -31,7 +31,7 @@ function App() {
 			GRID_SIZE: 30,
 			LINE_COLOR: 'rgba(0, 255, 0, 0.8)', // Couleur néon vert
 			LINE_WIDTH: 2, // Épaisseur des lignes
-			PERSPECTIVE: 1.5, // Facteur de perspective
+			PERSPECTIVE: 50, // Facteur de perspective
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
 			COLOR_CIRCLE: 'red',
@@ -64,17 +64,17 @@ function App() {
 
 			// Ajout d'étoiles aléatoires
 			ctx.fillStyle = 'white'
-			for (let i = 0; i < 100; i++) {
+			for (let i = 0; i < 150; i++) {
 				const x = Math.random() * width
 				const y = Math.random() * height
-				ctx.fillRect(x, y, 1, 1)
+				ctx.fillRect(x, y, 2, 2 )
 			}
 
 			// Style des lignes néon
 			ctx.strokeStyle = 'oklch(0.82% 0.792 136)'
 			ctx.lineWidth = 2
 			ctx.shadowColor = 'rgba(0, 255, 0, 0.5)'
-			ctx.shadowBlur = 10
+			ctx.shadowBlur = 90
 
 			const gridLines = params.GRID_SIZE
 			const randomAngle = (Math.random() * Math.PI) / 4 // Angle aléatoire
@@ -82,14 +82,27 @@ function App() {
 			const centerX = width / 2
 			const centerY = height / 2
 			for (let i = -gridLines; i <= gridLines; i++) {
-				const xOffset = Math.sin(randomAngle) * i * 20
-				const yOffset = Math.cos(randomAngle) * i * 20
+				const xOffset = Math.sin(randomAngle) * i * 25
+				const yOffset = Math.cos(randomAngle) * i * 25
 
 				ctx.beginPath()
 				ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective)
 				ctx.lineTo(centerX + xOffset * randomPerspective, height)
 				ctx.stroke()
 			}
+
+			// Charger et dessiner l'image SVG
+			const img = new Image()
+			img.onload = () => {
+				const randomX = Math.random() * (width - img.width)
+				const randomY = Math.random() * (height - img.height)
+				
+				// Définir la nouvelle taille
+				const newWidth = 300*3 // par exemple, 100px
+				const newHeight = 100*3 // par exemple, 100px
+				ctx.drawImage(img, randomX, randomY, newWidth, newHeight)
+			}
+			img.src = '/CombinationMark.svg'
 
 			// Dessin des cercles
 			/* for (let gridX = 0; gridX < width; gridX += cellSize) {
