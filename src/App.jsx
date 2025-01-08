@@ -10,14 +10,14 @@ function App() {
 
   <header>
     <img id='bg-header' className='bg' src="./grille.svg" alt="" />
-    <img src="./title.png" alt="" />
+    <img src="/CombinationMark.svg" alt="" />
   </header>
   <canvas id="top-grid"></canvas>
 
   <main>
     <section className='wlcmSection'>
       <div>
-        <img src="./logo.png" alt="" />
+        <img src="/LogoMark.svg" alt="" />
         <h1>Cover Generator</h1>
       </div>
       <p className='welcomP'>Welcome to our promotional pop-up website for the upcoming album! Create and generate different covers to get unique and cool covers and share it <br/> with the fan base and your friends!</p>
