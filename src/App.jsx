@@ -4,16 +4,29 @@ import { useEffect, useRef, useState } from 'react';
 import { Pane } from 'tweakpane';
 
 function App() {
-	const [isVisible, setIsVisible] = useState(false);
-	const [isVisibleControl, setIsVisibleControl] = useState(false);
+	const [isVisible, setIsVisible] = useState(true);
+	const [isVisibleControl, setIsVisibleControl] = useState(true);
 	const canvasRef = useRef(null);
 	const controlsRef = useRef(null);
 	const [storageItems] = useState([
-		{ id: 1, src: './LogoMark.svg', width: 100, height: 100 },
-		{ id: 2, src: './LogoMark.svg', width: 120, height: 120 },
-		{ id: 3, src: './LogoMark.svg', width: 150, height: 150 },
+		{ id: 1, src: './vintageTv.png', width: 300, height: 300 },
+		{ id: 2, src: './stars-and-nebulas.png', width: 500, height: 500 },
+		{ id: 3, src: './hand.png', width: 600, height: 400 },
 		{ id: 4, src: './LogoMark.svg', width: 180, height: 180 },
+		{ id: 5, src: '', width: 180, height: 180 },
 	]);
+
+	const neonColors = [
+		'oklch(0.82% 0.792 136)',  // Neon green (current color)
+		'oklch(0.9% 0.7 260)',    // Neon purple
+		'oklch(0.9% 0.7 220)',    // Neon blue
+		'oklch(0.9% 0.7 0)'       // Neon white (bright white neon)
+	];
+
+	function getRandomLineColor() {
+		const randomIndex = Math.floor(Math.random() * neonColors.length);
+		return neonColors[randomIndex];
+	}
 	const [selectedItem, setSelectedItem] = useState(null);
 	
 
@@ -37,6 +50,7 @@ function App() {
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
 			COLOR_CIRCLE: 'red',
+			SHOW_HORIZONTAL_LINES: true,
 	});
 
 	useEffect(() => {
@@ -59,6 +73,8 @@ function App() {
 			container: controlsRef.current,
 		});
 		pane.hidden = true;
+		const lineColor = getRandomLineColor();
+
 
 		function drawGridWithoutSVG() {
 			if (!ctx) return;
@@ -73,16 +89,23 @@ function App() {
 
 			// Ajout d'étoiles aléatoires
 			ctx.fillStyle = params.STAR_COLOR;
+			// ctx.shadowColor = params.STAR_COLOR; // Set the shadow color to white (or another color for glow)
+			// ctx.shadowBlur = 3;
+			ctx.filter = 'blur(1px)';
 			for (let i = 0; i < 150; i++) {
 				const x = Math.random() * width;
 				const y = Math.random() * height;
-				ctx.fillRect(x, y, 2, 2);
+				const starSize = Math.random() * (5 - 2) + 2;
+
+
+				ctx.fillRect(x, y, starSize, starSize);
 			}
+			ctx.filter = 'none';
 
 			// Style des lignes néon
-			ctx.strokeStyle = params.LINE_COLOR;
+			ctx.strokeStyle = lineColor;
 			ctx.lineWidth = params.LINE_WIDTH;
-			ctx.shadowColor = params.LINE_SHADOW_COLOR;
+			ctx.shadowColor = lineColor;
 			ctx.shadowBlur = 90;
 
 			const gridLines = params.GRID_SIZE;
@@ -97,6 +120,16 @@ function App() {
 				ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective);
 				ctx.lineTo(centerX + xOffset * randomPerspective, height);
 				ctx.stroke();
+			}
+			if (params.SHOW_HORIZONTAL_LINES) {
+				for (let i = -gridLines; i <= gridLines; i++) {
+					const xOffset = Math.sin(randomAngle) * i * 25;
+					const yOffset = Math.cos(randomAngle) * i * 25;
+					ctx.beginPath();
+					ctx.moveTo(centerX - xOffset * randomPerspective, centerY + yOffset);
+					ctx.lineTo(width, centerY + yOffset * randomPerspective);
+					ctx.stroke();
+				}
 			}
 
 		}
@@ -123,8 +156,23 @@ function App() {
 			const img = new Image();
 			img.src = selectedItem.src;
 			img.onload = () => {
-				const randomX = Math.random() * (width - selectedItem.width);
-				const randomY = Math.random() * (height - selectedItem.height);
+
+				const colorOverlay = lineColor;  // Use the line color for the overlay
+    		const opacity = 0.1;  // Adjust opacity to make it faint
+
+    			ctx.globalCompositeOperation = 'source-over'; // Reset to normal drawing mode
+					const radius = Math.min(width, height) / 4; // Adjust as needed
+
+					const centerX = width / 2;
+					const centerY = height / 2;
+
+					const angle = Math.random() * 2 * Math.PI; // Random angle in radians
+					const distance = Math.random() * radius; // Random distance from the center
+
+					const randomX = centerX + Math.cos(angle) * distance - selectedItem.width / 2;
+					const randomY = centerY + Math.sin(angle) * distance - selectedItem.height / 2;
+					ctx.shadowColor = 'transparent'; // Disable shadow color
+					ctx.shadowBlur = 0; // Remove shadow blur
 				ctx.drawImage(
 					img,
 					randomX,
@@ -132,6 +180,12 @@ function App() {
 					selectedItem.width,
 					selectedItem.height
 				);
+				ctx.globalCompositeOperation = 'multiply'; // Blend with the current image
+				ctx.fillStyle = colorOverlay;
+				ctx.globalAlpha = opacity; // Faint overlay
+				ctx.fillRect(randomX, randomY, img.width, img.height);
+				ctx.globalAlpha = 1; // Reset opacity
+    ctx.globalCompositeOperation = 'source-over';
 			};
 		}
 
@@ -141,6 +195,7 @@ function App() {
 		pane.addBinding(params, 'PERSPECTIVE', { min: -10, max: 5, step: 0.1 }).on('change', drawGridWithoutSVG);
 		pane.addBinding(params, 'STAR_COLOR').on('change', drawGridWithoutSVG);
 		pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGridWithoutSVG);
+		pane.addBinding(params, 'SHOW_HORIZONTAL_LINES').on('change', drawGridWithoutSVG);
 
 		return () => {
 			pane.dispose();
@@ -271,6 +326,7 @@ function App() {
 				<section className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
 	<h3>Controls</h3>
 	<form>
+		<div>
 		<label htmlFor='grid-size'>Grid Size:</label>
 		<input
 			type='range'
@@ -283,8 +339,10 @@ function App() {
 			onChange={(e) =>
 				setParams((prev) => ({ ...prev, GRID_SIZE: Number(e.target.value) }))
 			}
-		/>
+		/>	
+		</div>
 
+		<div>
 		<label htmlFor='line-width'>Line Width:</label>
 		<input
 			type='range'
@@ -298,7 +356,9 @@ function App() {
 				setParams((prev) => ({ ...prev, LINE_WIDTH: Number(e.target.value) }))
 			}
 		/>
+		</div>
 
+		<div>
 		<label htmlFor='perspective'>Perspective:</label>
 		<input
 			type='range'
@@ -312,7 +372,9 @@ function App() {
 				setParams((prev) => ({ ...prev, PERSPECTIVE: Number(e.target.value) }))
 			}
 		/>
+		</div>
 
+		<div>
 		<label htmlFor='star-color'>Star Color:</label>
 		<input
 			type='color'
@@ -323,6 +385,17 @@ function App() {
 				setParams((prev) => ({ ...prev, STAR_COLOR: e.target.value }))
 			}
 		/>
+		</div>
+
+<div>
+      <label htmlFor="show-horizontal-lines">Show Horizontal Lines:</label>
+      <input
+        type="checkbox"
+        id="show-horizontal-lines"
+        checked={params.SHOW_HORIZONTAL_LINES}
+        onChange={(e) => setParams({ ...params, SHOW_HORIZONTAL_LINES: e.target.checked })}
+      />
+    </div>
 	</form>
 </section>
 
