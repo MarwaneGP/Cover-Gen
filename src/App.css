@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-
-
 body {
 	background-color: oklch(14% 0 240deg);
 	color: oklch(90% 0 0deg);
@@ -260,6 +258,14 @@ footer {
 @media (max-width: 700px) {
 	/* Styles for phones and smaller devices */
 
+	body {
+		height: 435vw;
+		/* min-height: min-content; */
+	}
+	/* main {
+		min-height: min-content;
+	} */
+
 	h1 {
 		font-size: 7vw;
 	}
@@ -270,7 +276,43 @@ footer {
 		line-height: 4vw;
 	}
 
-	.container {
-		padding: 10px;
+	#bg-header {
+		height: 80vh;
+		width: auto;
+		left: 0;
+		transform: rotate(180deg) translate(40%, 0%);
+	}
+	header > img {
+		padding-top: 9.8vw;
+		width: 42vw;
+	}
+	#bg-footer {
+		bottom: 0dvh;
+	}
+	.wlcmSection {
+		margin-top: 20vw;
+		margin-bottom: 60vw;
+	}
+
+	main > section > div > img {
+		width: 10vw;
+		margin-right: 6vw;
+	}
+
+	.socialLinks {
+		width: 50vw;
+		left: 20vw;
+		top: 70vw;
+	}
+	.socialLinks img {
+		height: 8vw;
+	}
+	.explainP {
+		margin-top: 65vw;
+	}
+
+	canvas {
+		height: 80vw;
+		width: 80vw;
 	}
 }

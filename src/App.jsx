@@ -15,7 +15,6 @@ function App() {
 		{ id: 4, src: './LogoMark.svg', width: 180, height: 180 },
 	]);
 	const [selectedItem, setSelectedItem] = useState(null);
-	
 
 	const toggleModal = () => {
 		setIsVisible(!isVisible);
@@ -26,17 +25,17 @@ function App() {
 
 	const [params, setParams] = useState({
 		GRID_SIZE: 35,
-			LINE_COLOR: 'oklch(0.82% 0.792 136)' /* 'rgba(0, 255, 0, 0.8)' */, // Couleur néon vert
-			LINE_SHADOW_COLOR: 'rgba(0, 255, 0, 0.5)',
-			LINE_WIDTH: 2, // Épaisseur des lignes
-			PERSPECTIVE: 2, // Facteur de perspective
-			RANDOME_ANGLE: 6,
+		LINE_COLOR: 'oklch(0.82% 0.792 136)' /* 'rgba(0, 255, 0, 0.8)' */, // Couleur néon vert
+		LINE_SHADOW_COLOR: 'rgba(0, 255, 0, 0.5)',
+		LINE_WIDTH: 2, // Épaisseur des lignes
+		PERSPECTIVE: 2, // Facteur de perspective
+		RANDOME_ANGLE: 6,
 
-			STAR_COLOR: 'white',
+		STAR_COLOR: 'white',
 
-			RANDOMIZE_CIRCLE_RADIUS: true,
-			RANDOMIZE_CIRCLE_COLOR: false,
-			COLOR_CIRCLE: 'red',
+		RANDOMIZE_CIRCLE_RADIUS: true,
+		RANDOMIZE_CIRCLE_COLOR: false,
+		COLOR_CIRCLE: 'red',
 	});
 
 	useEffect(() => {
@@ -51,7 +50,7 @@ function App() {
 		canvas.height = height;
 
 		// const params = {
-			
+
 		// };
 
 		// const pane = new Pane();
@@ -86,7 +85,8 @@ function App() {
 			ctx.shadowBlur = 90;
 
 			const gridLines = params.GRID_SIZE;
-			const randomAngle = (Math.random() * Math.PI) / Math.random() * params.RANDOME_ANGLE; // Angle aléatoire
+			const randomAngle =
+				((Math.random() * Math.PI) / Math.random()) * params.RANDOME_ANGLE; // Angle aléatoire
 			const randomPerspective = params.PERSPECTIVE + Math.random(); // Perspective aléatoire
 			const centerX = width / 2;
 			const centerY = height / 2;
@@ -98,10 +98,7 @@ function App() {
 				ctx.lineTo(centerX + xOffset * randomPerspective, height);
 				ctx.stroke();
 			}
-
 		}
-		
-		
 
 		// Charger et dessiner l'image SVG
 		const img = new Image();
@@ -130,22 +127,30 @@ function App() {
 					randomX,
 					randomY,
 					selectedItem.width,
-					selectedItem.height
+					selectedItem.height,
 				);
 			};
 		}
 
-		pane.addBinding(params, 'GRID_SIZE', { min: 1, max: 60, step: 1 }).on('change', drawGridWithoutSVG);
+		pane
+			.addBinding(params, 'GRID_SIZE', { min: 1, max: 60, step: 1 })
+			.on('change', drawGridWithoutSVG);
 		pane.addBinding(params, 'LINE_COLOR').on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'LINE_WIDTH', { min: 1, max: 10 }).on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'PERSPECTIVE', { min: -10, max: 5, step: 0.1 }).on('change', drawGridWithoutSVG);
+		pane
+			.addBinding(params, 'LINE_WIDTH', { min: 1, max: 10 })
+			.on('change', drawGridWithoutSVG);
+		pane
+			.addBinding(params, 'PERSPECTIVE', { min: -10, max: 5, step: 0.1 })
+			.on('change', drawGridWithoutSVG);
 		pane.addBinding(params, 'STAR_COLOR').on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGridWithoutSVG);
+		pane
+			.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS')
+			.on('change', drawGridWithoutSVG);
 
 		return () => {
 			pane.dispose();
 		};
-	}, [params,selectedItem]);
+	}, [params, selectedItem]);
 
 	return (
 		<>
@@ -250,81 +255,92 @@ function App() {
 				</button>
 
 				<section className={`storage ${isVisible ? 'visible' : 'hidden'}`}>
-				<h3>Storage</h3>
-				<div>
-					{storageItems.map((item) => (
-						<div
-							key={item.id}
-							className={`storage-item ${selectedItem?.id === item.id ? 'selected' : ''}`}
-							onClick={() => setSelectedItem(item)}>
-							<img
-								src={item.src}
-								alt={`Item ${item.id}`}
-								style={{ width: '50px', height: '50px' }}
-							/>
-						</div>
-					))}
-				</div>
-			</section>
+					<h3>Storage</h3>
+					<div>
+						{storageItems.map((item) => (
+							<div
+								key={item.id}
+								className={`storage-item ${
+									selectedItem?.id === item.id ? 'selected' : ''
+								}`}
+								onClick={() => setSelectedItem(item)}>
+								<img
+									src={item.src}
+									alt={`Item ${item.id}`}
+									style={{ width: '50px', height: '50px' }}
+								/>
+							</div>
+						))}
+					</div>
+				</section>
 
+				<section
+					className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
+					<h3>Controls</h3>
+					<form>
+						<label htmlFor='grid-size'>Grid Size:</label>
+						<input
+							type='range'
+							id='grid-size'
+							name='grid-size'
+							min='1'
+							max='60'
+							step='1'
+							value={params.GRID_SIZE}
+							onChange={(e) =>
+								setParams((prev) => ({
+									...prev,
+									GRID_SIZE: Number(e.target.value),
+								}))
+							}
+						/>
 
-				<section className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
-	<h3>Controls</h3>
-	<form>
-		<label htmlFor='grid-size'>Grid Size:</label>
-		<input
-			type='range'
-			id='grid-size'
-			name='grid-size'
-			min='1'
-			max='60'
-			step='1'
-			value={params.GRID_SIZE}
-			onChange={(e) =>
-				setParams((prev) => ({ ...prev, GRID_SIZE: Number(e.target.value) }))
-			}
-		/>
+						<label htmlFor='line-width'>Line Width:</label>
+						<input
+							type='range'
+							id='line-width'
+							name='line-width'
+							min='1'
+							max='10'
+							step='1'
+							value={params.LINE_WIDTH}
+							onChange={(e) =>
+								setParams((prev) => ({
+									...prev,
+									LINE_WIDTH: Number(e.target.value),
+								}))
+							}
+						/>
 
-		<label htmlFor='line-width'>Line Width:</label>
-		<input
-			type='range'
-			id='line-width'
-			name='line-width'
-			min='1'
-			max='10'
-			step='1'
-			value={params.LINE_WIDTH}
-			onChange={(e) =>
-				setParams((prev) => ({ ...prev, LINE_WIDTH: Number(e.target.value) }))
-			}
-		/>
+						<label htmlFor='perspective'>Perspective:</label>
+						<input
+							type='range'
+							id='perspective'
+							name='perspective'
+							min='0.5'
+							max='2'
+							step='0.1'
+							value={params.PERSPECTIVE}
+							onChange={(e) =>
+								setParams((prev) => ({
+									...prev,
+									PERSPECTIVE: Number(e.target.value),
+								}))
+							}
+						/>
 
-		<label htmlFor='perspective'>Perspective:</label>
-		<input
-			type='range'
-			id='perspective'
-			name='perspective'
-			min='0.5'
-			max='2'
-			step='0.1'
-			value={params.PERSPECTIVE}
-			onChange={(e) =>
-				setParams((prev) => ({ ...prev, PERSPECTIVE: Number(e.target.value) }))
-			}
-		/>
-
-		<label htmlFor='star-color'>Star Color:</label>
-		<input
-			type='color'
-			id='star-color'
-			name='star-color'
-			value={params.STAR_COLOR}
-			onChange={(e) =>
-				setParams((prev) => ({ ...prev, STAR_COLOR: e.target.value }))
-			}
-		/>
-	</form>
-</section>
+						<label htmlFor='star-color'>Star Color:</label>
+						<input
+							type='color'
+							id='star-color'
+							name='star-color'
+							value={params.STAR_COLOR}
+							onChange={(e) =>
+								setParams((prev) => ({ ...prev, STAR_COLOR: e.target.value }))
+							}
+						/>
+					</form>
+				</section>
 
 				<section className='cover-section'>
 					<canvas
