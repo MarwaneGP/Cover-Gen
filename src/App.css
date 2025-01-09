@@ -249,7 +249,9 @@ canvas {
   margin-top: 20vw;
 }
 
-
+.fallback {
+  cursor: pointer;
+}
 
 #bg-footer {
   bottom: 3vw;

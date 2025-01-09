@@ -351,11 +351,15 @@ function App() {
 									selectedItem?.id === item.id ? 'selected' : ''
 								}`}
 								onClick={() => setSelectedItem(item)}>
-								<img
-									src={item.src}
-									alt={`Image ${item.id}`}
-									// onError={hideImg()}
-								/>
+								{item.src ? (
+          <img
+            src={item.src}
+            alt={`Image ${item.id}`}
+            onError={(e) => e.target.style.display = 'none'} // Hide the broken image
+          />
+        ) : (
+          <div className="fallback-image">Remove Image</div> // Show alt text in place of the image
+        )}
 							</div>
 						))}
 					</div>
