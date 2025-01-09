@@ -13,7 +13,7 @@ function App() {
 		{ id: 2, src: './stars-and-nebulas.png', width: 500, height: 500 },
 		{ id: 3, src: './hand.png', width: 600, height: 400 },
 		{ id: 4, src: './LogoMark.svg', width: 180, height: 180 },
-		{ id: 5, src: '', width: 180, height: 180 },
+		{ id: "remove", src: '', width: 180, height: 180 },
 	]);
 
 	const neonColors = [
@@ -147,14 +147,24 @@ function App() {
     };
 
     // Function to get non-overlapping position for the selected item
-    const getNonOverlappingPosition = (imgWidth, imgHeight, width, height, defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight) => {
-      let randomX, randomY;
-      do {
-        randomX = Math.random() * (width - imgWidth);
-        randomY = Math.random() * (height - imgHeight);
-      } while (checkOverlap(randomX, randomY, imgWidth, imgHeight, defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight));
-      return { randomX, randomY };
-    };
+    const getNonOverlappingPosition = (imgWidth, imgHeight, width, height, defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight, minDistance = 100) => {
+			let randomX, randomY;
+			
+			// Calculate a margin around the image to ensure separation
+			const marginX = imgWidth + minDistance;
+			const marginY = imgHeight + minDistance;
+		
+			do {
+				randomX = Math.random() * (width - marginX);
+				randomY = Math.random() * (height - marginY);
+			} while (
+				checkOverlap(randomX, randomY, imgWidth, imgHeight, defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight) || 
+				(Math.abs(randomX - defaultImgX) < minDistance && Math.abs(randomY - defaultImgY) < minDistance)
+			);
+		
+			return { randomX, randomY };
+		};
+		
 
     // Draw selected image if available
     if (selectedItem) {
@@ -223,6 +233,11 @@ function App() {
     link.download = 'canvas_image.png';
     link.click();
   };
+	function hideImg() {
+		document.getElementById("HideImg")
+				.style.display = "none";
+}
+
 
 	return (
 		<>
@@ -338,8 +353,8 @@ function App() {
 								onClick={() => setSelectedItem(item)}>
 								<img
 									src={item.src}
-									alt={`Item ${item.id}`}
-									style={{ width: '50px', height: '50px' }}
+									alt={`Image ${item.id}`}
+									// onError={hideImg()}
 								/>
 							</div>
 						))}
