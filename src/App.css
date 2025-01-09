@@ -311,6 +311,37 @@ footer {
 		margin-top: 65vw;
 	}
 
+	.toggle-storage-btn {
+		bottom: -173vw;
+		left: 9vw;
+		width: 3vw;
+		height: 3vw;
+	}
+	
+	.toggle-controls-btn {
+		bottom: -173vw;
+		right: 9vw;
+		width: 3vw;
+		height: 3vw;
+	}
+
+	.storage {
+		bottom: -165vw;
+		left: 25vw;
+		padding: 1vw;
+		width: 15vw;
+		height: 40vw;
+	}
+
+	.controls {
+		bottom: -143vw;
+		left: 25vw;
+		padding: 1vw;
+		width: 15vw;
+		height: 20vw;
+	}
+
+
 	canvas {
 		height: 80vw;
 		width: 80vw;
