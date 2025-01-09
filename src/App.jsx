@@ -215,6 +215,15 @@ function App() {
     };
   }, [params, selectedItem]);
 
+	const downloadCanvas = () => {
+    const canvas = canvasRef.current;
+    const image = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'canvas_image.png';
+    link.click();
+  };
+
 	return (
 		<>
 			<header>
@@ -412,6 +421,8 @@ function App() {
       />
     </div>
 	</form>
+
+	<button onClick={downloadCanvas}>Download Canvas</button>
 </section>
 
 				<section className='cover-section'>
