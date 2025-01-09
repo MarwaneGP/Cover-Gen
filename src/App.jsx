@@ -1,43 +1,47 @@
-import { useState } from 'react'
-import './App.css'
+import './App.css';
 
-import { useEffect, useRef } from 'react'
-import { Pane } from 'tweakpane'
+import { useEffect, useRef, useState } from 'react';
+import { Pane } from 'tweakpane';
 
 function App() {
-	const [isVisible, setIsVisible] = useState(false)
-	const [isVisibleControl, setIsVisibleControl] = useState(false)
-	const canvasRef = useRef(null)
+	const [isVisible, setIsVisible] = useState(false);
+	const [isVisibleControl, setIsVisibleControl] = useState(false);
+	const canvasRef = useRef(null);
 
 	const toggleModal = () => {
-		setIsVisible(!isVisible)
-	}
+		setIsVisible(!isVisible);
+	};
 	const toggleModalControl = () => {
-		setIsVisibleControl(!isVisibleControl)
-	}
+		setIsVisibleControl(!isVisibleControl);
+	};
 
 	useEffect(() => {
-		const canvas = canvasRef.current
-		if (!canvas) return
+		const canvas = canvasRef.current;
+		if (!canvas) return;
 
-		const ctx = canvas.getContext('2d')
-		const width = canvas.clientWidth * 2
-		const height = canvas.clientHeight * 2
+		const ctx = canvas.getContext('2d');
+		const width = canvas.clientWidth * 2;
+		const height = canvas.clientHeight * 2;
 
-		canvas.width = width
-		canvas.height = height
+		canvas.width = width;
+		canvas.height = height;
 
 		const params = {
-			GRID_SIZE: 30,
-			LINE_COLOR: 'rgba(0, 255, 0, 0.8)', // Couleur néon vert
+			GRID_SIZE: 35,
+			LINE_COLOR: 'oklch(0.82% 0.792 136)' /* 'rgba(0, 255, 0, 0.8)' */, // Couleur néon vert
+			LINE_SHADOW_COLOR: 'rgba(0, 255, 0, 0.5)',
 			LINE_WIDTH: 2, // Épaisseur des lignes
-			PERSPECTIVE: 50, // Facteur de perspective
+			PERSPECTIVE: 1, // Facteur de perspective
+			RANDOME_ANGLE: 6,
+
+			STAR_COLOR: 'white',
+
 			RANDOMIZE_CIRCLE_RADIUS: true,
 			RANDOMIZE_CIRCLE_COLOR: false,
 			COLOR_CIRCLE: 'red',
-		}
+		};
 
-		const pane = new Pane()
+		const pane = new Pane();
 
 		// function drawCircle(ctx, x, y, radius) {
 		// 	if (params.RANDOMIZE_CIRCLE_RADIUS) {
@@ -49,60 +53,47 @@ function App() {
 		// 	ctx.fill()
 		// }
 
-		function drawRandomizedGrid() {
-			if (!ctx) return
+		function drawGridWithoutSVG() {
+			if (!ctx) return;
 
-			ctx.clearRect(0, 0, width, height)
-			ctx.fillStyle = 'black'
-			ctx.fillRect(0, 0, width, height)
-
-			ctx.clearRect(0, 0, width, height)
+			ctx.clearRect(0, 0, width, height);
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, width, height);
 
 			// Fond noir
-			ctx.fillStyle = 'black'
-			ctx.fillRect(0, 0, width, height)
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, width, height);
 
 			// Ajout d'étoiles aléatoires
-			ctx.fillStyle = 'white'
+			ctx.fillStyle = params.STAR_COLOR;
 			for (let i = 0; i < 150; i++) {
-				const x = Math.random() * width
-				const y = Math.random() * height
-				ctx.fillRect(x, y, 2, 2 )
+				const x = Math.random() * width;
+				const y = Math.random() * height;
+				ctx.fillRect(x, y, 2, 2);
 			}
 
 			// Style des lignes néon
-			ctx.strokeStyle = 'oklch(0.82% 0.792 136)'
-			ctx.lineWidth = 2
-			ctx.shadowColor = 'rgba(0, 255, 0, 0.5)'
-			ctx.shadowBlur = 90
+			ctx.strokeStyle = params.LINE_COLOR;
+			ctx.lineWidth = params.LINE_WIDTH;
+			ctx.shadowColor = params.LINE_SHADOW_COLOR;
+			ctx.shadowBlur = 90;
 
-			const gridLines = params.GRID_SIZE
-			const randomAngle = (Math.random() * Math.PI) / 4 // Angle aléatoire
-			const randomPerspective = 1 + Math.random() // Perspective aléatoire
-			const centerX = width / 2
-			const centerY = height / 2
+			const gridLines = params.GRID_SIZE;
+			const randomAngle = (Math.random() * Math.PI) / params.RANDOME_ANGLE; // Angle aléatoire
+			const randomPerspective = params.PERSPECTIVE + Math.random(); // Perspective aléatoire
+			const centerX = width / 2;
+			const centerY = height / 2;
 			for (let i = -gridLines; i <= gridLines; i++) {
-				const xOffset = Math.sin(randomAngle) * i * 25
-				const yOffset = Math.cos(randomAngle) * i * 25
+				const xOffset = Math.sin(randomAngle) * i * 25;
+				const yOffset = Math.cos(randomAngle) * i * 25;
 
-				ctx.beginPath()
-				ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective)
-				ctx.lineTo(centerX + xOffset * randomPerspective, height)
-				ctx.stroke()
+				ctx.beginPath();
+				ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective);
+				ctx.lineTo(centerX + xOffset * randomPerspective, height);
+				ctx.stroke();
 			}
 
-			// Charger et dessiner l'image SVG
-			const img = new Image()
-			img.onload = () => {
-				const randomX = Math.random() * (width - img.width)
-				const randomY = Math.random() * (height - img.height)
-				
-				// Définir la nouvelle taille
-				const newWidth = 300*3 // par exemple, 100px
-				const newHeight = 100*3 // par exemple, 100px
-				ctx.drawImage(img, randomX, randomY, newWidth, newHeight)
-			}
-			img.src = '/CombinationMark.svg'
+			
 
 			// Dessin des cercles
 			/* for (let gridX = 0; gridX < width; gridX += cellSize) {
@@ -116,21 +107,36 @@ function App() {
 				}
 			} */
 		}
+		
+		
 
-		drawRandomizedGrid()
+		// Charger et dessiner l'image SVG
+		const img = new Image();
+		// Definir la taille de l'image
+		const mult = 1.8;
+		img.width = 300 * mult;
+		img.height = 100 * mult;
+		img.onload = () => {
+			const randomX = Math.random() * (width - img.width);
+			const randomY = Math.random() * (height - img.height);
+
+			drawGridWithoutSVG();
+			ctx.drawImage(img, randomX, randomY, img.width, img.height);
+		};
+		img.src = '/CombinationMark.svg';
 
 		pane
-			.addBinding(params, 'GRID_SIZE', { min: 1, max: 20, step: 1 })
-			.on('change', drawRandomizedGrid)
+			.addBinding(params, 'GRID_SIZE', { min: 1, max: 60, step: 1 })
+			.on('change', drawGridWithoutSVG);
 		pane
 			.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS')
-			.on('change', drawRandomizedGrid)
-		pane.addBinding(params, 'COLOR_CIRCLE').on('change', drawRandomizedGrid)
+			.on('change', drawGridWithoutSVG);
+		pane.addBinding(params, 'COLOR_CIRCLE').on('change', drawGridWithoutSVG);
 
 		return () => {
-			pane.dispose()
-		}
-	}, [])
+			pane.dispose();
+		};
+	}, []);
 
 	return (
 		<>
@@ -305,7 +311,7 @@ function App() {
 				<p>&copy; Marwane Ghalila &copy; Yannis G. Bikouta</p>
 			</footer>
 		</>
-	)
+	);
 }
 
-export default App
+export default App;
