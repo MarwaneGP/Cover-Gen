@@ -93,6 +93,8 @@ function App() {
 				ctx.stroke();
 			}
 
+			
+
 			// Dessin des cercles
 			/* for (let gridX = 0; gridX < width; gridX += cellSize) {
 				for (let gridY = 0; gridY < height; gridY += cellSize) {
@@ -105,6 +107,8 @@ function App() {
 				}
 			} */
 		}
+		
+		
 
 		// Charger et dessiner l'image SVG
 		const img = new Image();
