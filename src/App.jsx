@@ -53,160 +53,167 @@ function App() {
 	});
 
 	useEffect(() => {
-		const canvas = canvasRef.current;
-		if (!canvas) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-		const ctx = canvas.getContext('2d');
-		const width = canvas.clientWidth * 2;
-		const height = canvas.clientHeight * 2;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.clientWidth * 2;
+    const height = canvas.clientHeight * 2;
 
-		canvas.width = width;
-		canvas.height = height;
+    canvas.width = width;
+    canvas.height = height;
 
-		// const params = {
+    const pane = new Pane({ container: controlsRef.current });
+    pane.hidden = true;
 
-		// };
+    const lineColor = getRandomLineColor();
 
-		// const pane = new Pane();
-		const pane = new Pane({
-			container: controlsRef.current,
-		});
-		pane.hidden = true;
-		const lineColor = getRandomLineColor();
+    function drawGridWithoutSVG() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
 
+      // Draw stars
+      ctx.fillStyle = params.STAR_COLOR;
+      ctx.filter = 'blur(1px)';
+      for (let i = 0; i < 150; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const starSize = Math.random() * (5 - 2) + 2;
+        ctx.fillRect(x, y, starSize, starSize);
+      }
+      ctx.filter = 'none';
 
-		function drawGridWithoutSVG() {
-			if (!ctx) return;
+      // Neon grid lines
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = params.LINE_WIDTH;
+      ctx.shadowColor = lineColor;
+      ctx.shadowBlur = 90;
 
-			ctx.clearRect(0, 0, width, height);
-			ctx.fillStyle = 'black';
-			ctx.fillRect(0, 0, width, height);
+      const gridLines = params.GRID_SIZE;
+      const randomAngle = ((Math.random() * Math.PI) / Math.random()) * params.RANDOME_ANGLE;
+      const randomPerspective = params.PERSPECTIVE + Math.random();
+      const centerX = width / 2;
+      const centerY = height / 2;
+      for (let i = -gridLines; i <= gridLines; i++) {
+        const xOffset = Math.sin(randomAngle) * i * 25;
+        const yOffset = Math.cos(randomAngle) * i * 25;
+        ctx.beginPath();
+        ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective);
+        ctx.lineTo(centerX + xOffset * randomPerspective, height);
+        ctx.stroke();
+      }
 
-			// Fond noir
-			ctx.fillStyle = 'black';
-			ctx.fillRect(0, 0, width, height);
+      if (params.SHOW_HORIZONTAL_LINES) {
+        for (let i = -gridLines; i <= gridLines; i++) {
+          const xOffset = Math.sin(randomAngle) * i * 25;
+          const yOffset = Math.cos(randomAngle) * i * 25;
+          ctx.beginPath();
+          ctx.moveTo(centerX - xOffset * randomPerspective, centerY + yOffset);
+          ctx.lineTo(width, centerY + yOffset * randomPerspective);
+          ctx.stroke();
+        }
+      }
+    }
 
-			// Ajout d'étoiles aléatoires
-			ctx.fillStyle = params.STAR_COLOR;
-			// ctx.shadowColor = params.STAR_COLOR; // Set the shadow color to white (or another color for glow)
-			// ctx.shadowBlur = 3;
-			ctx.filter = 'blur(1px)';
-			for (let i = 0; i < 150; i++) {
-				const x = Math.random() * width;
-				const y = Math.random() * height;
-				const starSize = Math.random() * (5 - 2) + 2;
+    // Load and draw the first image (CombinationMark.svg)
+    const img = new Image();
+    img.src = '/CombinationMark.svg';
 
+    const mult = 1.2;
+    img.width = 300 * mult;
+    img.height = 100 * mult;
 
-				ctx.fillRect(x, y, starSize, starSize);
-			}
-			ctx.filter = 'none';
+    let defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight;
 
-			// Style des lignes néon
-			ctx.strokeStyle = lineColor;
-			ctx.lineWidth = params.LINE_WIDTH;
-			ctx.shadowColor = lineColor;
-			ctx.shadowBlur = 90;
+    img.onload = () => {
+      defaultImgX = Math.random() * (width - img.width);
+      defaultImgY = Math.random() * (height - img.height);
 
-			const gridLines = params.GRID_SIZE;
-			const randomAngle =
-				((Math.random() * Math.PI) / Math.random()) * params.RANDOME_ANGLE; // Angle aléatoire
-			const randomPerspective = params.PERSPECTIVE + Math.random(); // Perspective aléatoire
-			const centerX = width / 2;
-			const centerY = height / 2;
-			for (let i = -gridLines; i <= gridLines; i++) {
-				const xOffset = Math.sin(randomAngle) * i * 25;
-				const yOffset = Math.cos(randomAngle) * i * 25;
-				ctx.beginPath();
-				ctx.moveTo(centerX + xOffset, centerY - yOffset * randomPerspective);
-				ctx.lineTo(centerX + xOffset * randomPerspective, height);
-				ctx.stroke();
-			}
-			if (params.SHOW_HORIZONTAL_LINES) {
-				for (let i = -gridLines; i <= gridLines; i++) {
-					const xOffset = Math.sin(randomAngle) * i * 25;
-					const yOffset = Math.cos(randomAngle) * i * 25;
-					ctx.beginPath();
-					ctx.moveTo(centerX - xOffset * randomPerspective, centerY + yOffset);
-					ctx.lineTo(width, centerY + yOffset * randomPerspective);
-					ctx.stroke();
-				}
-			}
+      drawGridWithoutSVG();
+      ctx.drawImage(img, defaultImgX, defaultImgY, img.width, img.height);
 
-		}
-		
-		
+      defaultImgWidth = img.width;
+      defaultImgHeight = img.height;
+    };
 
-		// Charger et dessiner l'image SVG
-		const img = new Image();
-		img.src = '/CombinationMark.svg';
+    // Function to check overlap between two images
+    const checkOverlap = (x1, y1, w1, h1, x2, y2, w2, h2) => {
+      return x1 < x2 + w2 &&
+             x1 + w1 > x2 &&
+             y1 < y2 + h2 &&
+             y1 + h1 > y2;
+    };
 
-		// Definir la taille de l'image
-		const mult = 1.2;
-		img.width = 300 * mult;
-		img.height = 100 * mult;
-		img.onload = () => {
-			const randomX = Math.random() * (width - img.width);
-			const randomY = Math.random() * (height - img.height);
+    // Function to get non-overlapping position for the selected item
+    const getNonOverlappingPosition = (imgWidth, imgHeight, width, height, defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight) => {
+      let randomX, randomY;
+      do {
+        randomX = Math.random() * (width - imgWidth);
+        randomY = Math.random() * (height - imgHeight);
+      } while (checkOverlap(randomX, randomY, imgWidth, imgHeight, defaultImgX, defaultImgY, defaultImgWidth, defaultImgHeight));
+      return { randomX, randomY };
+    };
 
-			drawGridWithoutSVG();
-			ctx.drawImage(img, randomX, randomY, img.width, img.height);
-		};
+    // Draw selected image if available
+    if (selectedItem) {
+      const selectedImg = new Image();
+      selectedImg.src = selectedItem.src;
+      selectedImg.onload = () => {
+        const { randomX, randomY } = getNonOverlappingPosition(
+          selectedImg.width,
+          selectedImg.height,
+          width,
+          height,
+          defaultImgX, defaultImgY,
+          defaultImgWidth,
+          defaultImgHeight
+        );
 
-		if (selectedItem) {
-			const img = new Image();
-			img.src = selectedItem.src;
-			img.onload = () => {
+        const colorOverlay = lineColor;
+        const opacity = 0.1;
 
-				const colorOverlay = lineColor;  // Use the line color for the overlay
-    		const opacity = 0.1;  // Adjust opacity to make it faint
+        ctx.globalCompositeOperation = 'source-over';
+        const radius = Math.min(width, height) / 4;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * radius;
+        const newX = centerX + Math.cos(angle) * distance - selectedItem.width / 2;
+        const newY = centerY + Math.sin(angle) * distance - selectedItem.height / 2;
 
-    			ctx.globalCompositeOperation = 'source-over'; // Reset to normal drawing mode
-					const radius = Math.min(width, height) / 4; // Adjust as needed
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.drawImage(
+          selectedImg,
+          newX,
+          newY,
+          selectedItem.width,
+          selectedItem.height
+        );
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.fillStyle = colorOverlay;
+        ctx.globalAlpha = opacity;
+        ctx.fillRect(newX, newY, selectedImg.width, selectedImg.height);
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+      };
+    }
 
-					const centerX = width / 2;
-					const centerY = height / 2;
+    // Pane bindings
+    pane.addBinding(params, 'GRID_SIZE', { min: 1, max: 60, step: 1 }).on('change', drawGridWithoutSVG);
+    pane.addBinding(params, 'LINE_COLOR').on('change', drawGridWithoutSVG);
+    pane.addBinding(params, 'LINE_WIDTH', { min: 1, max: 10 }).on('change', drawGridWithoutSVG);
+    pane.addBinding(params, 'PERSPECTIVE', { min: -10, max: 5, step: 0.1 }).on('change', drawGridWithoutSVG);
+    pane.addBinding(params, 'STAR_COLOR').on('change', drawGridWithoutSVG);
+    pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGridWithoutSVG);
+    pane.addBinding(params, 'SHOW_HORIZONTAL_LINES').on('change', drawGridWithoutSVG);
 
-					const angle = Math.random() * 2 * Math.PI; // Random angle in radians
-					const distance = Math.random() * radius; // Random distance from the center
-
-					const randomX = centerX + Math.cos(angle) * distance - selectedItem.width / 2;
-					const randomY = centerY + Math.sin(angle) * distance - selectedItem.height / 2;
-					ctx.shadowColor = 'transparent'; // Disable shadow color
-					ctx.shadowBlur = 0; // Remove shadow blur
-				ctx.drawImage(
-					img,
-					randomX,
-					randomY,
-					selectedItem.width,
-					selectedItem.height,
-				);
-				ctx.globalCompositeOperation = 'multiply'; // Blend with the current image
-				ctx.fillStyle = colorOverlay;
-				ctx.globalAlpha = opacity; // Faint overlay
-				ctx.fillRect(randomX, randomY, img.width, img.height);
-				ctx.globalAlpha = 1; // Reset opacity
-    ctx.globalCompositeOperation = 'source-over';
-			};
-		}
-
-		pane
-			.addBinding(params, 'GRID_SIZE', { min: 1, max: 60, step: 1 })
-			.on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'LINE_COLOR').on('change', drawGridWithoutSVG);
-		pane
-			.addBinding(params, 'LINE_WIDTH', { min: 1, max: 10 })
-			.on('change', drawGridWithoutSVG);
-		pane
-			.addBinding(params, 'PERSPECTIVE', { min: -10, max: 5, step: 0.1 })
-			.on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'STAR_COLOR').on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'RANDOMIZE_CIRCLE_RADIUS').on('change', drawGridWithoutSVG);
-		pane.addBinding(params, 'SHOW_HORIZONTAL_LINES').on('change', drawGridWithoutSVG);
-
-		return () => {
-			pane.dispose();
-		};
-	}, [params, selectedItem]);
+    return () => {
+      pane.dispose();
+    };
+  }, [params, selectedItem]);
 
 	return (
 		<>
