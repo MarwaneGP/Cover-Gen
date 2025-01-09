@@ -317,30 +317,32 @@ footer {
 		width: 3vw;
 		height: 3vw;
 	}
-	
+
 	.toggle-controls-btn {
 		bottom: -173vw;
 		right: 9vw;
 		width: 3vw;
 		height: 3vw;
 	}
+	h3 {
+		font-size: 3vw;
+	}
 
 	.storage {
-		bottom: -165vw;
-		left: 25vw;
+		bottom: -220vw;
+		left: 20vw;
 		padding: 1vw;
-		width: 15vw;
-		height: 40vw;
+		width: 60vw;
+		height: 90vw;
 	}
 
 	.controls {
-		bottom: -143vw;
-		left: 25vw;
+		bottom: -220vw;
+		left: 20vw;
 		padding: 1vw;
-		width: 15vw;
-		height: 20vw;
+		width: 60vw;
+		height: 90vw;
 	}
-
 
 	canvas {
 		height: 80vw;
