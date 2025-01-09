@@ -161,7 +161,7 @@ main>section>div>img {
 
 .controls {
   position: absolute;
-  bottom: 11vw;
+  bottom: 1vw;
   right: 7vw;
   background-color: #28292e;
   color: white;
@@ -171,7 +171,7 @@ main>section>div>img {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.4s ease, opacity 0.4s ease;
   opacity: 1;
-  height: 20vw;
+  height: 30vw;
   display: grid;
   grid-template-rows: 1fr 10fr;
 }
@@ -184,6 +184,95 @@ main>section>div>img {
   transform: translate(200%, 0%);
   opacity: 0;
 }
+
+.controls form div {
+  margin-bottom: 2vw;
+}
+
+/* Label styling */
+.controls label {
+  font-size: 1vw;
+  color: #555;
+  margin-bottom: 0.2vw;
+  display: block;
+}
+
+/* Input range styling */
+.controls input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 0.5vw;
+  background-color: #ddd;
+  border-radius: 0.5vw;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.controls input[type="range"]:hover {
+  background-color: #bbb;
+}
+
+.controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0.9vw;
+  height: 0.9vw;
+  background-color: #787b88;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controls input[type="range"]::-moz-range-thumb {
+  width: 0.9vw;
+  height: 0.9vw;
+  background-color: #787b88;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Input color picker */
+.controls input[type="color"] {
+  width: 100%;
+  height: 2vw;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Checkbox styling */
+.controls input[type="checkbox"] {
+  margin-left: 1vw;
+  transform: scale(1.5);
+}
+
+/* Button styling */
+.controls button {
+  width: 100%;
+  padding: 1vw;
+  background-color: #787b88;
+  color: white;
+  border: none;
+  border-radius: 0.5vw;
+  font-size: 1.2vw;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+  background-color: #787b88;
+}
+
+.controls button:active {
+  background-color: #787b88;
+}
+
+.controls button:focus {
+  outline: none;
+}
+
+
+
 
 .toggle-storage-btn {
   background-color: transparent;
