@@ -8,6 +8,14 @@ function App() {
 	const [isVisibleControl, setIsVisibleControl] = useState(false);
 	const canvasRef = useRef(null);
 	const controlsRef = useRef(null);
+	const [storageItems] = useState([
+		{ id: 1, src: './LogoMark.svg', width: 100, height: 100 },
+		{ id: 2, src: './LogoMark.svg', width: 120, height: 120 },
+		{ id: 3, src: './LogoMark.svg', width: 150, height: 150 },
+		{ id: 4, src: './LogoMark.svg', width: 180, height: 180 },
+	]);
+	const [selectedItem, setSelectedItem] = useState(null);
+	
 
 	const toggleModal = () => {
 		setIsVisible(!isVisible);
@@ -50,6 +58,7 @@ function App() {
 		const pane = new Pane({
 			container: controlsRef.current,
 		});
+		pane.hidden = true;
 
 		function drawGridWithoutSVG() {
 			if (!ctx) return;
@@ -99,7 +108,7 @@ function App() {
 		img.src = '/CombinationMark.svg';
 
 		// Definir la taille de l'image
-		const mult = 1.8;
+		const mult = 1.2;
 		img.width = 300 * mult;
 		img.height = 100 * mult;
 		img.onload = () => {
@@ -109,6 +118,22 @@ function App() {
 			drawGridWithoutSVG();
 			ctx.drawImage(img, randomX, randomY, img.width, img.height);
 		};
+
+		if (selectedItem) {
+			const img = new Image();
+			img.src = selectedItem.src;
+			img.onload = () => {
+				const randomX = Math.random() * (width - selectedItem.width);
+				const randomY = Math.random() * (height - selectedItem.height);
+				ctx.drawImage(
+					img,
+					randomX,
+					randomY,
+					selectedItem.width,
+					selectedItem.height
+				);
+			};
+		}
 
 		pane.addBinding(params, 'GRID_SIZE', { min: 1, max: 60, step: 1 }).on('change', drawGridWithoutSVG);
 		pane.addBinding(params, 'LINE_COLOR').on('change', drawGridWithoutSVG);
@@ -120,7 +145,7 @@ function App() {
 		return () => {
 			pane.dispose();
 		};
-	}, [params]);
+	}, [params,selectedItem]);
 
 	return (
 		<>
@@ -225,14 +250,23 @@ function App() {
 				</button>
 
 				<section className={`storage ${isVisible ? 'visible' : 'hidden'}`}>
-					<h3>Storage</h3>
-					<div>
-						<div>Item 1</div>
-						<div>Item 2</div>
-						<div>Item 3</div>
-						<div>Item 4</div>
-					</div>
-				</section>
+				<h3>Storage</h3>
+				<div>
+					{storageItems.map((item) => (
+						<div
+							key={item.id}
+							className={`storage-item ${selectedItem?.id === item.id ? 'selected' : ''}`}
+							onClick={() => setSelectedItem(item)}>
+							<img
+								src={item.src}
+								alt={`Item ${item.id}`}
+								style={{ width: '50px', height: '50px' }}
+							/>
+						</div>
+					))}
+				</div>
+			</section>
+
 
 				<section className={`controls ${isVisibleControl ? 'visible' : 'hidden'}`}>
 	<h3>Controls</h3>
